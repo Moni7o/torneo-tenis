@@ -5,72 +5,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organizador de Torneos de Tenis Pro</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f4f8; margin: 0; padding: 0; color: #333; }
+        /* ESTÉTICA OSCURA Y MINIMALISTA */
+        :root {
+            --bg-color: #0d0d0d;
+            --panel-bg: #1a1a1a;
+            --border-color: #e67e22; 
+            --text-color: #ffffff;
+            --accent-color: #f39c12;
+        }
+
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 0; }
         
         /* MENU DE NAVEGACIÓN */
-        .navbar { background-color: #2c3e50; padding: 15px 20px; display: flex; gap: 20px; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .navbar h2 { margin: 0; font-size: 18px; color: #e67e22; margin-right: 20px; }
-        .navbar button { background: transparent; color: white; border: none; font-size: 16px; cursor: pointer; font-weight: bold; padding: 5px 10px; border-radius: 4px; }
-        .navbar button:hover, .navbar button.active { background-color: #34495e; color: #e67e22; }
+        .navbar { background-color: #000; padding: 20px; border-bottom: 2px solid var(--border-color); display: flex; gap: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .navbar h2 { margin: 0; font-size: 18px; color: var(--accent-color); margin-right: 20px; text-transform: uppercase; letter-spacing: 1px;}
+        .navbar button { background: transparent; color: #ccc; border: none; font-size: 16px; cursor: pointer; font-weight: bold; padding: 5px 10px; border-radius: 4px; transition: 0.3s; }
+        .navbar button:hover, .navbar button.active { color: var(--accent-color); }
 
-        .container { max-width: 1100px; margin: 30px auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .container { max-width: 1100px; margin: 30px auto; background: var(--panel-bg); padding: 30px; border-radius: 12px; border: 1px solid #333; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         
-        /* SISTEMA DE VISTAS */
         .view { display: none; }
         .view.active { display: block; }
 
-        h1, h2, h3 { color: #2c3e50; }
-        .panel { border: 1px solid #ddd; padding: 15px; margin-bottom: 20px; border-radius: 5px; background-color: #f9fbfd; }
-        input[type="text"], select { padding: 10px; margin: 5px 0; border: 1px solid #ccc; border-radius: 4px; width: 100%; max-width: 300px; }
-        .btn-primary { background-color: #3498db; color: white; border: none; cursor: pointer; font-weight: bold; padding: 10px 15px; border-radius: 4px; }
-        .btn-primary:hover { background-color: #2980b9; }
+        h1, h2, h3, h4 { color: var(--accent-color); text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* PANELES Y TARJETAS */
+        .panel { border: 1px solid #333; padding: 20px; margin-bottom: 20px; border-radius: 8px; background-color: #161616; }
+        input[type="text"], select { padding: 10px; margin: 5px 0; border: 1px solid #444; border-radius: 4px; width: 100%; max-width: 300px; background: #000; color: white; }
+        
+        /* BOTONES */
+        .btn-primary { background-color: transparent; border: 1px solid var(--border-color); color: var(--accent-color); padding: 10px 20px; cursor: pointer; font-weight: bold; border-radius: 4px; transition: 0.3s; }
+        .btn-primary:hover { background-color: var(--border-color); color: white; }
         .btn-danger { background-color: #e74c3c; color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px; }
-        .btn-success { background-color: #2ecc71; color: white; border: none; padding: 15px; font-size: 16px; font-weight: bold; width: 100%; border-radius: 4px; cursor: pointer; }
+        .btn-success { background-color: var(--border-color); color: white; border: none; padding: 15px; font-size: 16px; font-weight: bold; width: 100%; border-radius: 4px; cursor: pointer; transition: 0.3s; }
+        .btn-success:hover { background-color: #d35400; }
         
         /* TARJETAS DE TORNEOS */
         .tournaments-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; margin-top: 15px; }
-        .t-card { border: 1px solid #ddd; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .t-card.active-t { border-left: 5px solid #2ecc71; }
-        .t-card.finished-t { border-left: 5px solid #7f8c8d; background-color: #fdfdfd; }
-        .t-card h3 { margin-top: 0; margin-bottom: 5px; }
-        .t-card p { margin: 5px 0; font-size: 14px; color: #555; }
+        .t-card { background-color: #161616; border: 1px solid #333; padding: 20px; border-radius: 8px; }
+        .t-card.active-t { border-left: 5px solid var(--border-color); }
+        .t-card.finished-t { border-left: 5px solid #555; opacity: 0.8; }
+        .t-card h3 { margin-top: 0; margin-bottom: 5px; color: white; }
+        .t-card p { margin: 5px 0 15px 0; font-size: 14px; color: #aaa; }
 
-        .players-checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin: 15px 0; background: #fff; padding: 15px; border: 1px solid #eee; border-radius: 5px; }
-        .player-check-item { display: flex; align-items: center; gap: 8px; font-size: 15px; }
+        .players-checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin: 15px 0; background: #000; padding: 15px; border: 1px solid #333; border-radius: 5px; }
+        .player-check-item { display: flex; align-items: center; gap: 8px; font-size: 15px; color: #ddd; }
 
+        /* TABLAS Y FIXTURES */
         table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 15px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #34495e; color: white; }
-        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type=number] { -moz-appearance: textfield; width: 32px; text-align: center; font-weight: bold; }
-        .zone-card { border: 2px solid #3498db; padding: 15px; margin-top: 15px; border-radius: 5px; background-color: #fff; }
-        .zone-match { padding: 10px 0; border-bottom: 1px dashed #ccc; }
-        .matchup { background-color: #fff; border: 1px solid #ddd; border-radius: 5px; padding: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .player-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid #eee; }
-        .player-row:last-child { border-bottom: none; }
-        .p-scores input { border: 1px solid #ccc; background: #fafafa; border-radius: 3px; }
-        .p-scores input:disabled { background: #e0e0e0; border: 1px solid #ccc; opacity: 0.6; }
+        th { background-color: #222; color: var(--accent-color); padding: 10px; border-bottom: 2px solid var(--border-color); text-align: left;}
+        td { padding: 10px; border-bottom: 1px solid #333; text-align: left; }
         
-        /* DISEÑO DE BRACKET Y PODIO LADO A LADO */
-        .bracket-container { display: flex; flex-direction: row; background: #1a1a1a; padding: 20px; border-radius: 8px; border: 2px solid #e67e22; background-image: radial-gradient(circle, #2c3e50, #111); }
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; width: 32px; text-align: center; font-weight: bold; background: #000; color: white; border: 1px solid #444; }
+        
+        .zone-card { border: 1px solid #333; padding: 20px; margin-top: 15px; border-radius: 8px; background-color: #111; }
+        .zone-match { padding: 10px 0; border-bottom: 1px dashed #333; }
+        .matchup { background-color: #1a1a1a; border: 1px solid #333; border-radius: 5px; padding: 10px; }
+        .player-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #222; }
+        .player-row:last-child { border-bottom: none; }
+        .p-scores input:disabled { background: #111; border: 1px solid #222; opacity: 0.5; }
+        
+        /* DISEÑO DE BRACKET Y PODIO */
+        .bracket-container { display: flex; flex-direction: row; background: #000; padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); }
         .bracket-round { display: flex; flex-direction: column; justify-content: space-around; margin: 0 15px; min-width: 260px; }
-        .bracket-round h4 { text-align: center; color: #e67e22; text-transform: uppercase; margin-bottom: 15px; border-bottom: 1px solid #e67e22; padding-bottom: 5px; }
-        .bracket-container .matchup { background-color: #2c2c2c; border: 1px solid #e67e22; color: white; margin-bottom: 15px; }
-        .bracket-container .p-scores input { background: #111; color: white; border: 1px solid #555; }
-        .bracket-container .p-scores input:disabled { background: #333; border: 1px solid #222; }
+        .bracket-round h4 { text-align: center; color: var(--accent-color); text-transform: uppercase; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
+        .bracket-container .matchup { background-color: #111; border: 1px solid #444; color: white; margin-bottom: 15px; }
         
         /* ESTILOS DEL PODIO */
-        .podium-container { background: #1a1a1a; border: 2px solid #e67e22; border-radius: 8px; padding: 20px; min-width: 250px; display: flex; flex-direction: column; justify-content: flex-end; background-image: radial-gradient(circle, #2c3e50, #111); flex: 0 0 auto; }
+        .podium-container { background: #000; border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; min-width: 250px; display: flex; flex-direction: column; justify-content: flex-end; flex: 0 0 auto; }
         .podium { display: flex; align-items: flex-end; justify-content: center; gap: 8px; height: 180px; margin-top: auto; }
         .step { display: flex; flex-direction: column; align-items: center; width: 75px; }
         .step .name { color: white; font-size: 13px; text-align: center; margin-bottom: 8px; line-height: 1.2; word-break: break-word; }
-        .step .bar { width: 100%; color: #111; font-weight: bold; font-size: 14px; text-align: center; display: flex; align-items: flex-start; justify-content: center; padding-top: 8px; border-top-left-radius: 4px; border-top-right-radius: 4px; box-shadow: inset 0 2px 4px rgba(255,255,255,0.3); }
+        .step .bar { width: 100%; color: #000; font-weight: bold; font-size: 14px; text-align: center; display: flex; align-items: flex-start; justify-content: center; padding-top: 8px; border-top-left-radius: 4px; border-top-right-radius: 4px; box-shadow: inset 0 2px 4px rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.1); }
         .step-1 .bar { height: 120px; background: linear-gradient(to bottom, #f1c40f, #f39c12); }
         .step-2 .bar { height: 80px; background: linear-gradient(to bottom, #bdc3c7, #95a5a6); }
         .step-3 .bar { height: 50px; background: linear-gradient(to bottom, #cd7f32, #d35400); }
 
-        .standings-table th { background-color: #27ae60; font-size: 12px; padding: 6px; }
-        .standings-table td { padding: 6px; font-size: 12px; }
+        .standings-table th { background-color: #222; font-size: 12px; padding: 8px; }
+        .standings-table td { padding: 8px; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -88,7 +101,7 @@
         <h2>Torneos Activos</h2>
         <div id="activeTournamentsGrid" class="tournaments-grid"></div>
         
-        <h2 style="margin-top: 40px; border-top: 2px solid #eee; padding-top: 20px;">Torneos Finalizados</h2>
+        <h2 style="margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">Torneos Finalizados</h2>
         <div id="finishedTournamentsGrid" class="tournaments-grid"></div>
     </div>
 
@@ -106,7 +119,7 @@
             <div id="playerSelectionDiv" style="display: none;">
                 <label><strong>Selecciona los participantes:</strong></label>
                 <div class="players-checkbox-grid" id="checkboxesContainer"></div>
-                <p style="font-size: 13px; color: #7f8c8d;">¿Falta alguien? <a href="#" onclick="switchView('view-db', document.querySelectorAll('.nav-btn')[2])">Ve a la Base de Jugadores para agregarlo.</a></p>
+                <p style="font-size: 13px; color: #7f8c8d;">¿Falta alguien? <a href="#" style="color: var(--accent-color);" onclick="switchView('view-db', document.querySelectorAll('.nav-btn')[2])">Ve a la Base de Jugadores para agregarlo.</a></p>
                 <button class="btn-success" onclick="generateNewTournament()">Generar Fixture y Comenzar Torneo</button>
             </div>
         </div>
@@ -114,11 +127,11 @@
 
     <div id="view-db" class="view">
         <h2>Gestión de Categorías y Jugadores</h2>
-        <div class="panel" style="background: #fff3e0; border-color: #ffb74d;">
+        <div class="panel" style="border-color: var(--border-color);">
             <h3>Categorías</h3>
             <input type="text" id="catName" placeholder="Nueva categoría (Ej: 4ta Masculino)">
             <button class="btn-primary" onclick="addCategory()">+ Agregar Categoría</button>
-            <ul id="catList"></ul>
+            <ul id="catList" style="color: #ddd;"></ul>
         </div>
 
         <div class="panel">
@@ -136,9 +149,9 @@
 
     <div id="view-fixture" class="view">
         <button class="btn-primary" onclick="switchView('view-home', document.querySelectorAll('.nav-btn')[0])">⬅ Volver al Inicio</button>
-        <button class="btn-danger" id="btnFinishTourney" style="float: right; background-color: #2c3e50;" onclick="markTournamentFinished()">🏁 Finalizar Torneo</button>
+        <button class="btn-danger" id="btnFinishTourney" style="float: right;" onclick="markTournamentFinished()">🏁 Finalizar Torneo</button>
         
-        <h1 id="activeTournamentTitle" style="text-align: center; color: #e67e22;"></h1>
+        <h1 id="activeTournamentTitle" style="text-align: center; color: var(--accent-color); margin-top: 30px;"></h1>
         <div id="fixtureContainer"></div>
     </div>
 
@@ -164,7 +177,6 @@
         if (viewId === 'view-home') renderDashboard();
     }
 
-    // BASE DE DATOS
     function addCategory() {
         const catName = document.getElementById('catName').value.trim();
         if (catName && !categories.includes(catName)) {
@@ -195,19 +207,18 @@
         const catList = document.getElementById('catList'); const playerCatSelect = document.getElementById('playerCat'); const tCategorySelect = document.getElementById('tCategory');
         catList.innerHTML = ''; playerCatSelect.innerHTML = '<option value="">Selecciona una Categoría...</option>'; tCategorySelect.innerHTML = '<option value="">Selecciona una Categoría...</option>';
         categories.forEach(cat => {
-            catList.innerHTML += `<li>${cat} <button class="btn-danger" style="padding: 2px 5px;" onclick="removeCategory('${cat}')">X</button></li>`;
+            catList.innerHTML += `<li style="margin-bottom: 8px;">${cat} <button class="btn-danger" style="padding: 2px 6px; font-size:10px; margin-left: 10px;" onclick="removeCategory('${cat}')">X</button></li>`;
             playerCatSelect.innerHTML += `<option value="${cat}">${cat}</option>`; tCategorySelect.innerHTML += `<option value="${cat}">${cat}</option>`;
         });
         const tbody = document.querySelector('#playersTable tbody'); tbody.innerHTML = '';
         players.forEach(p => { tbody.innerHTML += `<tr><td>${p.name}</td><td>${p.category}</td><td><button class="btn-danger" onclick="removePlayer(${p.id})">Eliminar</button></td></tr>`; });
     }
 
-    // CREACIÓN DE TORNEOS
     function loadPlayersForTournament() {
         const cat = document.getElementById('tCategory').value; const div = document.getElementById('playerSelectionDiv'); const container = document.getElementById('checkboxesContainer');
         container.innerHTML = ''; if (!cat) { div.style.display = 'none'; return; }
         let catPlayers = players.filter(p => p.category === cat);
-        if(catPlayers.length === 0) { container.innerHTML = '<p style="color:red;">No hay jugadores registrados.</p>'; } 
+        if(catPlayers.length === 0) { container.innerHTML = '<p style="color:#e74c3c;">No hay jugadores registrados.</p>'; } 
         else { catPlayers.forEach(p => { container.innerHTML += `<label class="player-check-item"><input type="checkbox" value="${p.name}" class="tourney-player-cb" checked> ${p.name}</label>`; }); }
         div.style.display = 'block';
     }
@@ -253,7 +264,6 @@
         openTournament(newTournament.id);
     }
 
-    // DASHBOARD Y FIXTURE
     function renderDashboard() {
         const activeGrid = document.getElementById('activeTournamentsGrid'); const finishedGrid = document.getElementById('finishedTournamentsGrid');
         activeGrid.innerHTML = ''; finishedGrid.innerHTML = '';
@@ -261,8 +271,8 @@
             let card = `<div class="t-card ${t.status === 'Activo' ? 'active-t' : 'finished-t'}"><h3>${t.name}</h3><p>Fecha: ${t.date}</p><button class="btn-primary" onclick="openTournament('${t.id}')">${t.status === 'Activo' ? 'Ir a los Partidos' : 'Ver Resultados'}</button></div>`;
             if (t.status === 'Activo') activeGrid.innerHTML += card; else finishedGrid.innerHTML += card;
         });
-        if(activeGrid.innerHTML === '') activeGrid.innerHTML = '<p>No hay torneos activos en curso.</p>';
-        if(finishedGrid.innerHTML === '') finishedGrid.innerHTML = '<p>No hay torneos finalizados aún.</p>';
+        if(activeGrid.innerHTML === '') activeGrid.innerHTML = '<p style="color:#aaa;">No hay torneos activos en curso.</p>';
+        if(finishedGrid.innerHTML === '') finishedGrid.innerHTML = '<p style="color:#aaa;">No hay torneos finalizados aún.</p>';
     }
 
     function openTournament(id) {
@@ -292,7 +302,6 @@
         fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'saveTournament', torneo: tObj }) });
     }
 
-    // CALCULO DEL GANADOR DEL PARTIDO
     function getWinnerFromMatch(match) {
         const s = match.scores;
         if (s.s1p1 === '' || s.s1p2 === '' || s.s2p1 === '' || s.s2p2 === '') return null;
@@ -394,16 +403,15 @@
             let tableHTML = `<table class="standings-table"><thead><tr><th>Pos</th><th>Jugador</th><th>PG</th><th>Dif Sets</th><th>Dif Games</th></tr></thead><tbody>`;
             standings.forEach((st, i) => {
                 let dS = st.setsWon - st.setsLost; let dG = st.gamesWon - st.gamesLost;
-                tableHTML += `<tr><td><strong>${i+1}°</strong></td><td><strong>${st.name}</strong></td><td>${st.matchesWon}</td><td>${dS >= 0 ? '+'+dS : dS}</td><td>${dG >= 0 ? '+'+dG : dG}</td></tr>`;
+                tableHTML += `<tr><td><strong>${i+1}°</strong></td><td><strong style="color:white;">${st.name}</strong></td><td>${st.matchesWon}</td><td>${dS >= 0 ? '+'+dS : dS}</td><td>${dG >= 0 ? '+'+dG : dG}</td></tr>`;
             });
-            tableHTML += `</tbody></table><strong>Partidos:</strong><br>`;
-            zone.matches.forEach((match, idx) => { zoneHTML += `<div class="zone-match"><div class="match-header">Partido ${idx + 1}</div>${createMatchBlock(match, isFinished)}</div>`; });
+            tableHTML += `</tbody></table><strong style="color:var(--accent-color);">Partidos:</strong><br>`;
+            zone.matches.forEach((match, idx) => { zoneHTML += `<div class="zone-match"><div class="match-header" style="color:#aaa;">Partido ${idx + 1}</div>${createMatchBlock(match, isFinished)}</div>`; });
             container.innerHTML += zoneHTML + `</div>`;
         });
 
-        // BRACKET Y PODIO LADO A LADO
         let knockoutHTML = `<div class="knockout-card">
-                                <h3>🔥 Fase Eliminatoria</h3>
+                                <h3 style="margin-top:40px;">🔥 Fase Eliminatoria</h3>
                                 <div style="display: flex; flex-wrap: wrap; gap: 20px;">
                                     <div class="bracket-container" style="flex: 1; overflow-x: auto;">`;
         
@@ -420,33 +428,25 @@
             }
         });
         
-        knockoutHTML += `</div>`; // Cierra bracket-container
+        knockoutHTML += `</div>`; 
 
-        // CALCULAR GANADORES PARA EL PODIO
         let champ = "---", runnerUp = "---", third = "---";
         let finalMatch = activeTournament.fixtures.knockout.find(m => m.round === 'Final');
         if (finalMatch) {
             let w = getWinnerFromMatch(finalMatch);
-            if (w) {
-                champ = w;
-                runnerUp = (w === finalMatch.p1) ? finalMatch.p2 : finalMatch.p1;
-            }
+            if (w) { champ = w; runnerUp = (w === finalMatch.p1) ? finalMatch.p2 : finalMatch.p1; }
         }
         
         let semiMatches = activeTournament.fixtures.knockout.filter(m => m.round === 'Semifinales');
         if (semiMatches.length > 0) {
             let semiLosers = [];
-            semiMatches.forEach(sm => {
-                let w = getWinnerFromMatch(sm);
-                if (w) semiLosers.push(w === sm.p1 ? sm.p2 : sm.p1);
-            });
+            semiMatches.forEach(sm => { let w = getWinnerFromMatch(sm); if (w) semiLosers.push(w === sm.p1 ? sm.p2 : sm.p1); });
             if (semiLosers.length > 0) third = semiLosers.join(" / ");
         }
 
-        // AGREGAR EL PODIO VISUAL
         knockoutHTML += `
             <div class="podium-container">
-                <h4 style="text-align:center; color:#e67e22; border-bottom: 1px solid #e67e22; padding-bottom:5px; margin-top:0;">🏆 PODIO</h4>
+                <h4 style="text-align:center; color:var(--accent-color); border-bottom: 1px solid var(--border-color); padding-bottom:5px; margin-top:0;">🏆 PODIO</h4>
                 <div class="podium">
                     <div class="step step-2">
                         <div class="name">${runnerUp}</div>
@@ -462,7 +462,7 @@
                     </div>
                 </div>
             </div>
-        </div></div>`; // Cierra flex-wrap y knockout-card
+        </div></div>`;
 
         container.innerHTML += knockoutHTML;
         document.querySelectorAll('.matchup').forEach(m => updateSetStatusVisual(m));
@@ -480,9 +480,8 @@
         }
     }
 
-    // ARRANQUE
     window.onload = () => {
-        document.getElementById('activeTournamentsGrid').innerHTML = '<p>Conectando con la base de datos...</p>';
+        document.getElementById('activeTournamentsGrid').innerHTML = '<p style="color:#aaa;">Conectando con la base de datos...</p>';
         fetch(scriptURL)
             .then(res => res.json())
             .then(data => {
@@ -490,7 +489,7 @@
                 players.forEach(p => { if(!categories.includes(p.category)) categories.push(p.category); });
                 updateUI(); renderDashboard();
             })
-            .catch(err => { document.getElementById('activeTournamentsGrid').innerHTML = '<p style="color:red;">Error de conexión con Google Sheets.</p>'; });
+            .catch(err => { document.getElementById('activeTournamentsGrid').innerHTML = '<p style="color:#e74c3c;">Error de conexión con Google Sheets.</p>'; });
     };
 </script>
 </body>
