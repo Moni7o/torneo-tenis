@@ -264,17 +264,52 @@
         openTournament(newTournament.id);
     }
 
+    // NUEVA FUNCIÓN: Limpia la fecha para mostrar solo DD/MM/AAAA
+    function formatShortDate(dateStr) {
+        if (!dateStr) return '';
+        let d = new Date(dateStr);
+        // Si el formato no es válido, devuelve el texto original
+        if (isNaN(d.getTime())) return dateStr; 
+        
+        let dia = String(d.getDate()).padStart(2, '0');
+        let mes = String(d.getMonth() + 1).padStart(2, '0');
+        let anio = d.getFullYear();
+        
+        return `${dia}/${mes}/${anio}`;
+    }
+
+    // FUNCIÓN ACTUALIZADA: Renderiza las tarjetas con las fechas correctas
     function renderDashboard() {
-        const activeGrid = document.getElementById('activeTournamentsGrid'); const finishedGrid = document.getElementById('finishedTournamentsGrid');
+        const activeGrid = document.getElementById('activeTournamentsGrid'); 
+        const finishedGrid = document.getElementById('finishedTournamentsGrid');
         activeGrid.innerHTML = ''; finishedGrid.innerHTML = '';
+        
         tournaments.forEach(t => {
-            let card = `<div class="t-card ${t.status === 'Activo' ? 'active-t' : 'finished-t'}"><h3>${t.name}</h3><p>Fecha: ${t.date}</p><button class="btn-primary" onclick="openTournament('${t.id}')">${t.status === 'Activo' ? 'Ir a los Partidos' : 'Ver Resultados'}</button></div>`;
-            if (t.status === 'Activo') activeGrid.innerHTML += card; else finishedGrid.innerHTML += card;
+            let dateInicio = formatShortDate(t.date);
+            let dateText = '';
+            
+            // Lógica para mostrar las etiquetas correctas
+            if (t.status === 'Activo') {
+                dateText = `Fecha de inicio: ${dateInicio}`;
+            } else {
+                // Si es finalizado, busca la fecha de fin. Si no la tiene (torneo viejo), repite la de inicio.
+                let dateFin = t.fixtures.endDate ? formatShortDate(t.fixtures.endDate) : dateInicio;
+                dateText = `Inicio y fin: ${dateInicio} al ${dateFin}`;
+            }
+
+            let card = `<div class="t-card ${t.status === 'Activo' ? 'active-t' : 'finished-t'}">
+                <h3>${t.name}</h3>
+                <p style="margin: 5px 0 15px 0; font-size: 14px; color: #aaa;">${dateText}</p>
+                <button class="btn-primary" onclick="openTournament('${t.id}')">${t.status === 'Activo' ? 'Ir a los Partidos' : 'Ver Resultados'}</button>
+            </div>`;
+            
+            if (t.status === 'Activo') activeGrid.innerHTML += card; 
+            else finishedGrid.innerHTML += card;
         });
+        
         if(activeGrid.innerHTML === '') activeGrid.innerHTML = '<p style="color:#aaa;">No hay torneos activos en curso.</p>';
         if(finishedGrid.innerHTML === '') finishedGrid.innerHTML = '<p style="color:#aaa;">No hay torneos finalizados aún.</p>';
     }
-
     function openTournament(id) {
         activeTournament = tournaments.find(t => t.id === id); switchView('view-fixture');
         document.getElementById('activeTournamentTitle').innerText = activeTournament.name;
@@ -282,9 +317,15 @@
         resolveAllNames(activeTournament); renderActiveFixture();
     }
 
+// FUNCIÓN ACTUALIZADA: Ahora guarda el día exacto en que se finalizó el torneo
     function markTournamentFinished() {
         if(confirm("¿Declarar este torneo como Finalizado?")) {
-            activeTournament.status = 'Finalizado'; syncTournamentToCloud(activeTournament); switchView('view-home', document.querySelectorAll('.nav-btn')[0]);
+            activeTournament.status = 'Finalizado'; 
+            // Guardamos la fecha de fin dentro del JSON para no alterar las columnas de Google Sheets
+            activeTournament.fixtures.endDate = new Date().toISOString();
+            
+            syncTournamentToCloud(activeTournament); 
+            switchView('view-home', document.querySelectorAll('.nav-btn')[0]);
         }
     }
 
