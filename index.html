@@ -13,7 +13,7 @@
         .navbar button { background: transparent; color: white; border: none; font-size: 16px; cursor: pointer; font-weight: bold; padding: 5px 10px; border-radius: 4px; }
         .navbar button:hover, .navbar button.active { background-color: #34495e; color: #e67e22; }
 
-        .container { max-width: 1050px; margin: 30px auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .container { max-width: 1100px; margin: 30px auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         
         /* SISTEMA DE VISTAS */
         .view { display: none; }
@@ -27,7 +27,7 @@
         .btn-danger { background-color: #e74c3c; color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px; }
         .btn-success { background-color: #2ecc71; color: white; border: none; padding: 15px; font-size: 16px; font-weight: bold; width: 100%; border-radius: 4px; cursor: pointer; }
         
-        /* TARJETAS DE TORNEOS (HOME) */
+        /* TARJETAS DE TORNEOS */
         .tournaments-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; margin-top: 15px; }
         .t-card { border: 1px solid #ddd; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .t-card.active-t { border-left: 5px solid #2ecc71; }
@@ -35,11 +35,9 @@
         .t-card h3 { margin-top: 0; margin-bottom: 5px; }
         .t-card p { margin: 5px 0; font-size: 14px; color: #555; }
 
-        /* CHECKBOXES DE JUGADORES */
         .players-checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin: 15px 0; background: #fff; padding: 15px; border: 1px solid #eee; border-radius: 5px; }
         .player-check-item { display: flex; align-items: center; gap: 8px; font-size: 15px; }
 
-        /* TABLAS Y FIXTURES (Se mantienen los estilos anteriores) */
         table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 15px; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
         th { background-color: #34495e; color: white; }
@@ -52,19 +50,31 @@
         .player-row:last-child { border-bottom: none; }
         .p-scores input { border: 1px solid #ccc; background: #fafafa; border-radius: 3px; }
         .p-scores input:disabled { background: #e0e0e0; border: 1px solid #ccc; opacity: 0.6; }
-        .bracket-container { display: flex; flex-direction: row; background: #1a1a1a; padding: 20px; border-radius: 8px; overflow-x: auto; border: 2px solid #e67e22; background-image: radial-gradient(circle, #2c3e50, #111); }
+        
+        /* DISEÑO DE BRACKET Y PODIO LADO A LADO */
+        .bracket-container { display: flex; flex-direction: row; background: #1a1a1a; padding: 20px; border-radius: 8px; border: 2px solid #e67e22; background-image: radial-gradient(circle, #2c3e50, #111); }
         .bracket-round { display: flex; flex-direction: column; justify-content: space-around; margin: 0 15px; min-width: 260px; }
         .bracket-round h4 { text-align: center; color: #e67e22; text-transform: uppercase; margin-bottom: 15px; border-bottom: 1px solid #e67e22; padding-bottom: 5px; }
         .bracket-container .matchup { background-color: #2c2c2c; border: 1px solid #e67e22; color: white; margin-bottom: 15px; }
         .bracket-container .p-scores input { background: #111; color: white; border: 1px solid #555; }
         .bracket-container .p-scores input:disabled { background: #333; border: 1px solid #222; }
+        
+        /* ESTILOS DEL PODIO */
+        .podium-container { background: #1a1a1a; border: 2px solid #e67e22; border-radius: 8px; padding: 20px; min-width: 250px; display: flex; flex-direction: column; justify-content: flex-end; background-image: radial-gradient(circle, #2c3e50, #111); flex: 0 0 auto; }
+        .podium { display: flex; align-items: flex-end; justify-content: center; gap: 8px; height: 180px; margin-top: auto; }
+        .step { display: flex; flex-direction: column; align-items: center; width: 75px; }
+        .step .name { color: white; font-size: 13px; text-align: center; margin-bottom: 8px; line-height: 1.2; word-break: break-word; }
+        .step .bar { width: 100%; color: #111; font-weight: bold; font-size: 14px; text-align: center; display: flex; align-items: flex-start; justify-content: center; padding-top: 8px; border-top-left-radius: 4px; border-top-right-radius: 4px; box-shadow: inset 0 2px 4px rgba(255,255,255,0.3); }
+        .step-1 .bar { height: 120px; background: linear-gradient(to bottom, #f1c40f, #f39c12); }
+        .step-2 .bar { height: 80px; background: linear-gradient(to bottom, #bdc3c7, #95a5a6); }
+        .step-3 .bar { height: 50px; background: linear-gradient(to bottom, #cd7f32, #d35400); }
+
         .standings-table th { background-color: #27ae60; font-size: 12px; padding: 6px; }
         .standings-table td { padding: 6px; font-size: 12px; }
     </style>
 </head>
 <body>
 
-<!-- BARRA DE NAVEGACIÓN -->
 <div class="navbar">
     <h2>🎾 Tenis Pro</h2>
     <button class="nav-btn active" onclick="switchView('view-home', this)">Inicio (Torneos)</button>
@@ -74,7 +84,6 @@
 
 <div class="container">
     
-    <!-- VISTA 1: INICIO (DASHBOARD) -->
     <div id="view-home" class="view active">
         <h2>Torneos Activos</h2>
         <div id="activeTournamentsGrid" class="tournaments-grid"></div>
@@ -83,7 +92,6 @@
         <div id="finishedTournamentsGrid" class="tournaments-grid"></div>
     </div>
 
-    <!-- VISTA 2: CREAR TORNEO -->
     <div id="view-create" class="view">
         <h2>Crear Nuevo Torneo</h2>
         <div class="panel">
@@ -96,7 +104,7 @@
             </select><br><br>
 
             <div id="playerSelectionDiv" style="display: none;">
-                <label><strong>Selecciona los jugadores participantes:</strong></label>
+                <label><strong>Selecciona los participantes:</strong></label>
                 <div class="players-checkbox-grid" id="checkboxesContainer"></div>
                 <p style="font-size: 13px; color: #7f8c8d;">¿Falta alguien? <a href="#" onclick="switchView('view-db', document.querySelectorAll('.nav-btn')[2])">Ve a la Base de Jugadores para agregarlo.</a></p>
                 <button class="btn-success" onclick="generateNewTournament()">Generar Fixture y Comenzar Torneo</button>
@@ -104,7 +112,6 @@
         </div>
     </div>
 
-    <!-- VISTA 3: BASE DE JUGADORES (ABM) -->
     <div id="view-db" class="view">
         <h2>Gestión de Categorías y Jugadores</h2>
         <div class="panel" style="background: #fff3e0; border-color: #ffb74d;">
@@ -127,7 +134,6 @@
         </div>
     </div>
 
-    <!-- VISTA 4: GESTIÓN DE FIXTURE ACTIVO -->
     <div id="view-fixture" class="view">
         <button class="btn-primary" onclick="switchView('view-home', document.querySelectorAll('.nav-btn')[0])">⬅ Volver al Inicio</button>
         <button class="btn-danger" id="btnFinishTourney" style="float: right; background-color: #2c3e50;" onclick="markTournamentFinished()">🏁 Finalizar Torneo</button>
@@ -139,15 +145,13 @@
 </div>
 
 <script>
-    // PEGA AQUÍ TU NUEVA URL DE GOOGLE APPS SCRIPT
     const scriptURL = 'https://script.google.com/macros/s/AKfycbxQknJzexEiLc1wAjbonnmBXHxBM3dPWm19jHTQX96VGBIuT_GYybCrO-ilhCV7jjYG/exec';
     
     let categories = [];
     let players = [];
     let tournaments = [];
-    let activeTournament = null; // El torneo que el usuario tiene abierto en pantalla
+    let activeTournament = null; 
 
-    // CONTROL DE PESTAÑAS
     function switchView(viewId, btnElement) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.getElementById(viewId).classList.add('active');
@@ -160,9 +164,7 @@
         if (viewId === 'view-home') renderDashboard();
     }
 
-    // ==========================================
-    // MÓDULO: BASE DE DATOS (Categorías y Jugadores)
-    // ==========================================
+    // BASE DE DATOS
     function addCategory() {
         const catName = document.getElementById('catName').value.trim();
         if (catName && !categories.includes(catName)) {
@@ -171,14 +173,12 @@
     }
     function removeCategory(cat) {
         if (confirm(`¿Eliminar la categoría "${cat}"?`)) {
-            categories = categories.filter(c => c !== cat);
-            players = players.filter(p => p.category !== cat); updateUI();
+            categories = categories.filter(c => c !== cat); players = players.filter(p => p.category !== cat); updateUI();
             fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'deleteCategory', category: cat }) });
         }
     }
     function addPlayer() {
-        const name = document.getElementById('playerName').value.trim();
-        const cat = document.getElementById('playerCat').value;
+        const name = document.getElementById('playerName').value.trim(); const cat = document.getElementById('playerCat').value;
         if (name && cat) {
             const newPlayer = { id: Date.now(), name: name, category: cat };
             players.push(newPlayer); document.getElementById('playerName').value = ''; updateUI();
@@ -186,91 +186,51 @@
         } else { alert("Completa el nombre y selecciona la categoría."); }
     }
     function removePlayer(id) {
-        if (confirm(`¿Deseas eliminar a este jugador de la base general?`)) {
+        if (confirm(`¿Deseas eliminar a este jugador?`)) {
             players = players.filter(p => p.id !== id); updateUI();
             fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'deletePlayer', id: id }) });
         }
     }
     function updateUI() {
-        // Actualiza Base de Datos
-        const catList = document.getElementById('catList');
-        const playerCatSelect = document.getElementById('playerCat');
-        const tCategorySelect = document.getElementById('tCategory');
-        
-        catList.innerHTML = '';
-        playerCatSelect.innerHTML = '<option value="">Selecciona una Categoría...</option>';
-        tCategorySelect.innerHTML = '<option value="">Selecciona una Categoría...</option>';
-        
+        const catList = document.getElementById('catList'); const playerCatSelect = document.getElementById('playerCat'); const tCategorySelect = document.getElementById('tCategory');
+        catList.innerHTML = ''; playerCatSelect.innerHTML = '<option value="">Selecciona una Categoría...</option>'; tCategorySelect.innerHTML = '<option value="">Selecciona una Categoría...</option>';
         categories.forEach(cat => {
             catList.innerHTML += `<li>${cat} <button class="btn-danger" style="padding: 2px 5px;" onclick="removeCategory('${cat}')">X</button></li>`;
-            playerCatSelect.innerHTML += `<option value="${cat}">${cat}</option>`;
-            tCategorySelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+            playerCatSelect.innerHTML += `<option value="${cat}">${cat}</option>`; tCategorySelect.innerHTML += `<option value="${cat}">${cat}</option>`;
         });
-
-        const tbody = document.querySelector('#playersTable tbody');
-        tbody.innerHTML = '';
-        players.forEach(p => {
-            tbody.innerHTML += `<tr><td>${p.name}</td><td>${p.category}</td><td><button class="btn-danger" onclick="removePlayer(${p.id})">Eliminar</button></td></tr>`;
-        });
+        const tbody = document.querySelector('#playersTable tbody'); tbody.innerHTML = '';
+        players.forEach(p => { tbody.innerHTML += `<tr><td>${p.name}</td><td>${p.category}</td><td><button class="btn-danger" onclick="removePlayer(${p.id})">Eliminar</button></td></tr>`; });
     }
 
-    // ==========================================
-    // MÓDULO: CREACIÓN DE TORNEOS (El Asistente)
-    // ==========================================
+    // CREACIÓN DE TORNEOS
     function loadPlayersForTournament() {
-        const cat = document.getElementById('tCategory').value;
-        const div = document.getElementById('playerSelectionDiv');
-        const container = document.getElementById('checkboxesContainer');
-        container.innerHTML = '';
-
-        if (!cat) { div.style.display = 'none'; return; }
-        
+        const cat = document.getElementById('tCategory').value; const div = document.getElementById('playerSelectionDiv'); const container = document.getElementById('checkboxesContainer');
+        container.innerHTML = ''; if (!cat) { div.style.display = 'none'; return; }
         let catPlayers = players.filter(p => p.category === cat);
-        if(catPlayers.length === 0) {
-            container.innerHTML = '<p style="color:red;">No hay jugadores registrados en esta categoría.</p>';
-        } else {
-            catPlayers.forEach(p => {
-                container.innerHTML += `
-                    <label class="player-check-item">
-                        <input type="checkbox" value="${p.name}" class="tourney-player-cb" checked> ${p.name}
-                    </label>`;
-            });
-        }
+        if(catPlayers.length === 0) { container.innerHTML = '<p style="color:red;">No hay jugadores registrados.</p>'; } 
+        else { catPlayers.forEach(p => { container.innerHTML += `<label class="player-check-item"><input type="checkbox" value="${p.name}" class="tourney-player-cb" checked> ${p.name}</label>`; }); }
         div.style.display = 'block';
     }
 
     function generateNewTournament() {
-        const tName = document.getElementById('tName').value.trim();
-        const cat = document.getElementById('tCategory').value;
+        const tName = document.getElementById('tName').value.trim(); const cat = document.getElementById('tCategory').value;
         const checkboxes = document.querySelectorAll('.tourney-player-cb:checked');
-        
         if(!tName) { alert("Ponle un nombre al torneo."); return; }
-        if(checkboxes.length < 3) { alert("Necesitas al menos 3 jugadores para armar un torneo."); return; }
+        if(checkboxes.length < 3) { alert("Necesitas al menos 3 jugadores."); return; }
 
         let selectedPlayers = Array.from(checkboxes).map(cb => cb.value).sort(() => Math.random() - 0.5);
-        
-        // Estructura interna del Fixture
-        let fixturesObj = { zones: [], knockout: [] };
-        let zonaCount = 1;
-        let cleanCatId = cat.replace(/\s+/g, '');
+        let fixturesObj = { zones: [], knockout: [] }; let zonaCount = 1; let cleanCatId = cat.replace(/\s+/g, '');
 
         while (selectedPlayers.length > 0) {
             let size = (selectedPlayers.length === 3 || selectedPlayers.length === 5 || selectedPlayers.length === 6) && selectedPlayers.length < 4 ? 3 : 4;
             if(selectedPlayers.length < 3) size = selectedPlayers.length;
-
-            let zonePlayers = selectedPlayers.splice(0, size);
-            let matches = [];
+            let zonePlayers = selectedPlayers.splice(0, size); let matches = [];
             for (let i = 0; i < zonePlayers.length; i++) {
                 for (let j = i + 1; j < zonePlayers.length; j++) {
-                    matches.push({
-                        id: `${cleanCatId}-Z${zonaCount}-M${i}-${j}`,
-                        p1: zonePlayers[i], p2: zonePlayers[j],
-                        scores: { s1p1: '', s2p1: '', s3p1: '', s1p2: '', s2p2: '', s3p2: '' }
-                    });
+                    matches.push({ id: `${cleanCatId}-Z${zonaCount}-M${i}-${j}`, p1: zonePlayers[i], p2: zonePlayers[j], scores: { s1p1: '', s2p1: '', s3p1: '', s1p2: '', s2p2: '', s3p2: '' } });
                 }
             }
-            fixturesObj.zones.push({ name: `Zona ${zonaCount}`, players: zonePlayers, matches: matches });
-            zonaCount++;
+            fixturesObj.zones.push({ name: `Zona ${zonaCount}`, players: zonePlayers, matches: matches }); zonaCount++;
         }
 
         let totalZonas = zonaCount - 1;
@@ -281,131 +241,96 @@
             fixturesObj.knockout.push({ id: `${cleanCatId}-KO-S2`, round: 'Semifinales', p1Placeholder: '1-Z2', p2Placeholder: '2-Z1', p1: '1ro Zona 2', p2: '2do Zona 1', scores: {s1p1:'',s2p1:'',s3p1:'',s1p2:'',s2p2:'',s3p2:''} });
             fixturesObj.knockout.push({ id: `${cleanCatId}-KO-F`, round: 'Final', p1Placeholder: 'W-S1', p2Placeholder: 'W-S2', p1: 'Ganador Semi 1', p2: 'Ganador Semi 2', scores: {s1p1:'',s2p1:'',s3p1:'',s1p2:'',s2p2:'',s3p2:''} });
         } else {
-            for (let k = 1; k <= 4; k++) {
-                fixturesObj.knockout.push({ id: `${cleanCatId}-KO-C${k}`, round: 'Cuartos de Final', p1Placeholder: `1-Z${k}`, p2Placeholder: k===1?'BEST-2':k===2?'2-Z3':k===3?'2-Z2':'2-Z1', p1: `1ro Zona ${k}`, p2: k===1?'Mejor 2do':`2do Zona ${5-k}`, scores: {s1p1:'',s2p1:'',s3p1:'',s1p2:'',s2p2:'',s3p2:''} });
-            }
+            for (let k = 1; k <= 4; k++) { fixturesObj.knockout.push({ id: `${cleanCatId}-KO-C${k}`, round: 'Cuartos de Final', p1Placeholder: `1-Z${k}`, p2Placeholder: k===1?'BEST-2':k===2?'2-Z3':k===3?'2-Z2':'2-Z1', p1: `1ro Zona ${k}`, p2: k===1?'Mejor 2do':`2do Zona ${5-k}`, scores: {s1p1:'',s2p1:'',s3p1:'',s1p2:'',s2p2:'',s3p2:''} }); }
             fixturesObj.knockout.push({ id: `${cleanCatId}-KO-S1`, round: 'Semifinales', p1Placeholder: 'W-C1', p2Placeholder: 'W-C2', p1: 'Ganador C1', p2: 'Ganador C2', scores: {s1p1:'',s2p1:'',s3p1:'',s1p2:'',s2p2:'',s3p2:''} });
             fixturesObj.knockout.push({ id: `${cleanCatId}-KO-S2`, round: 'Semifinales', p1Placeholder: 'W-C3', p2Placeholder: 'W-C4', p1: 'Ganador C3', p2: 'Ganador C4', scores: {s1p1:'',s2p1:'',s3p1:'',s1p2:'',s2p2:'',s3p2:''} });
             fixturesObj.knockout.push({ id: `${cleanCatId}-KO-F`, round: 'Final', p1Placeholder: 'W-S1', p2Placeholder: 'W-S2', p1: 'Ganador Semi 1', p2: 'Ganador Semi 2', scores: {s1p1:'',s2p1:'',s3p1:'',s1p2:'',s2p2:'',s3p2:''} });
         }
 
-        const newTournament = {
-            id: Date.now().toString(),
-            name: `${tName} - ${cat}`,
-            status: 'Activo',
-            date: new Date().toLocaleDateString(),
-            fixtures: fixturesObj
-        };
-
-        tournaments.push(newTournament);
-        syncTournamentToCloud(newTournament);
-        
-        document.getElementById('tName').value = '';
-        document.getElementById('playerSelectionDiv').style.display = 'none';
-        
+        const newTournament = { id: Date.now().toString(), name: `${tName} - ${cat}`, status: 'Activo', date: new Date().toLocaleDateString(), fixtures: fixturesObj };
+        tournaments.push(newTournament); syncTournamentToCloud(newTournament);
+        document.getElementById('tName').value = ''; document.getElementById('playerSelectionDiv').style.display = 'none';
         openTournament(newTournament.id);
     }
 
-    // ==========================================
-    // MÓDULO: DASHBOARD Y FIXTURE ACTIVO
-    // ==========================================
+    // DASHBOARD Y FIXTURE
     function renderDashboard() {
-        const activeGrid = document.getElementById('activeTournamentsGrid');
-        const finishedGrid = document.getElementById('finishedTournamentsGrid');
+        const activeGrid = document.getElementById('activeTournamentsGrid'); const finishedGrid = document.getElementById('finishedTournamentsGrid');
         activeGrid.innerHTML = ''; finishedGrid.innerHTML = '';
-
         tournaments.forEach(t => {
-            let card = `<div class="t-card ${t.status === 'Activo' ? 'active-t' : 'finished-t'}">
-                <h3>${t.name}</h3>
-                <p>Fecha: ${t.date}</p>
-                <button class="btn-primary" onclick="openTournament('${t.id}')">${t.status === 'Activo' ? 'Ir a los Partidos' : 'Ver Resultados'}</button>
-            </div>`;
-            
-            if (t.status === 'Activo') activeGrid.innerHTML += card;
-            else finishedGrid.innerHTML += card;
+            let card = `<div class="t-card ${t.status === 'Activo' ? 'active-t' : 'finished-t'}"><h3>${t.name}</h3><p>Fecha: ${t.date}</p><button class="btn-primary" onclick="openTournament('${t.id}')">${t.status === 'Activo' ? 'Ir a los Partidos' : 'Ver Resultados'}</button></div>`;
+            if (t.status === 'Activo') activeGrid.innerHTML += card; else finishedGrid.innerHTML += card;
         });
-
         if(activeGrid.innerHTML === '') activeGrid.innerHTML = '<p>No hay torneos activos en curso.</p>';
         if(finishedGrid.innerHTML === '') finishedGrid.innerHTML = '<p>No hay torneos finalizados aún.</p>';
     }
 
     function openTournament(id) {
-        activeTournament = tournaments.find(t => t.id === id);
-        switchView('view-fixture');
-        
+        activeTournament = tournaments.find(t => t.id === id); switchView('view-fixture');
         document.getElementById('activeTournamentTitle').innerText = activeTournament.name;
         document.getElementById('btnFinishTourney').style.display = activeTournament.status === 'Activo' ? 'block' : 'none';
-        
-        resolveAllNames(activeTournament);
-        renderActiveFixture();
+        resolveAllNames(activeTournament); renderActiveFixture();
     }
 
     function markTournamentFinished() {
-        if(confirm("¿Declarar este torneo como Finalizado? Ya no podrás editar los resultados fácilmente.")) {
-            activeTournament.status = 'Finalizado';
-            syncTournamentToCloud(activeTournament);
-            switchView('view-home', document.querySelectorAll('.nav-btn')[0]);
+        if(confirm("¿Declarar este torneo como Finalizado?")) {
+            activeTournament.status = 'Finalizado'; syncTournamentToCloud(activeTournament); switchView('view-home', document.querySelectorAll('.nav-btn')[0]);
         }
     }
 
     function onScoreChange(matchId, field, value) {
         if(activeTournament.status === 'Finalizado') return;
-
         let match = null;
-        for (let zone of activeTournament.fixtures.zones) {
-            match = zone.matches.find(m => m.id === matchId); if (match) break;
-        }
+        for (let zone of activeTournament.fixtures.zones) { match = zone.matches.find(m => m.id === matchId); if (match) break; }
         if (!match) match = activeTournament.fixtures.knockout.find(m => m.id === matchId);
-        
         if (match) {
-            match.scores[field] = value;
-            resolveAllNames(activeTournament);
-            renderActiveFixture();
-            syncTournamentToCloud(activeTournament);
+            match.scores[field] = value; resolveAllNames(activeTournament); renderActiveFixture(); syncTournamentToCloud(activeTournament);
         }
     }
 
     function syncTournamentToCloud(tObj) {
-        fetch(scriptURL, {
-            method: 'POST', mode: 'no-cors',
-            body: JSON.stringify({ action: 'saveTournament', torneo: tObj })
-        }).catch(e => console.error("Error sincronizando", e));
+        fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'saveTournament', torneo: tObj }) });
     }
 
-    // ==========================================
-    // CÁLCULOS MATEMÁTICOS DE TENIS (Reutilizados)
-    // ==========================================
-    function calculateZoneStandings(zone) {
-        let stats = {};
-        zone.players.forEach(p => { stats[p] = { name: p, matchesWon: 0, setsWon: 0, setsLost: 0, gamesWon: 0, gamesLost: 0 }; });
+    // CALCULO DEL GANADOR DEL PARTIDO
+    function getWinnerFromMatch(match) {
+        const s = match.scores;
+        if (s.s1p1 === '' || s.s1p2 === '' || s.s2p1 === '' || s.s2p2 === '') return null;
+        let p1Sets = 0; let p2Sets = 0;
+        if (parseInt(s.s1p1) > parseInt(s.s1p2)) p1Sets++; else if(parseInt(s.s1p2) > parseInt(s.s1p1)) p2Sets++;
+        if (parseInt(s.s2p1) > parseInt(s.s2p2)) p1Sets++; else if(parseInt(s.s2p2) > parseInt(s.s2p1)) p2Sets++;
+        if (p1Sets === 1 && p2Sets === 1) { 
+            if (parseInt(s.s3p1) > parseInt(s.s3p2)) p1Sets++; else if(parseInt(s.s3p2) > parseInt(s.s3p1)) p2Sets++; 
+        }
+        if (p1Sets > p2Sets) return match.p1;
+        if (p2Sets > p1Sets) return match.p2;
+        return null;
+    }
 
+    function calculateZoneStandings(zone) {
+        let stats = {}; zone.players.forEach(p => { stats[p] = { name: p, matchesWon: 0, setsWon: 0, setsLost: 0, gamesWon: 0, gamesLost: 0 }; });
         zone.matches.forEach(m => {
-            const s = m.scores;
-            if (s.s1p1 === '' || s.s1p2 === '' || s.s2p1 === '' || s.s2p2 === '') return;
+            const s = m.scores; if (s.s1p1 === '' || s.s1p2 === '' || s.s2p1 === '' || s.s2p2 === '') return;
             let s1p1 = parseInt(s.s1p1)||0; let s1p2 = parseInt(s.s1p2)||0; let s2p1 = parseInt(s.s2p1)||0; let s2p2 = parseInt(s.s2p2)||0; let s3p1 = parseInt(s.s3p1)||0; let s3p2 = parseInt(s.s3p2)||0;
             let p1Sets = 0; let p2Sets = 0; let p1Games = s1p1+s2p1; let p2Games = s1p2+s2p2;
             if (s1p1 > s1p2) p1Sets++; else if (s1p2 > s1p1) p2Sets++;
             if (s2p1 > s2p2) p1Sets++; else if (s2p2 > s2p1) p2Sets++;
             if (p1Sets === 1 && p2Sets === 1) { p1Games += s3p1; p2Games += s3p2; if (s3p1 > s3p2) p1Sets++; else if (s3p2 > s3p1) p2Sets++; }
-
             stats[m.p1].setsWon += p1Sets; stats[m.p1].setsLost += p2Sets; stats[m.p1].gamesWon += p1Games; stats[m.p1].gamesLost += p2Games;
             stats[m.p2].setsWon += p2Sets; stats[m.p2].setsLost += p1Sets; stats[m.p2].gamesWon += p2Games; stats[m.p2].gamesLost += p1Games;
             if (p1Sets > p2Sets) stats[m.p1].matchesWon++; else if (p2Sets > p1Sets) stats[m.p2].matchesWon++;
         });
-
         return Object.values(stats).sort((a, b) => {
             if (b.matchesWon !== a.matchesWon) return b.matchesWon - a.matchesWon;
             let diffSetsA = a.setsWon - a.setsLost; let diffSetsB = b.setsWon - b.setsLost;
-            if (diffSetsB !== diffSetsA) return diffSetsB - diffSetsA;
-            return (b.gamesWon - b.gamesLost) - (a.gamesWon - a.gamesLost);
+            if (diffSetsB !== diffSetsA) return diffSetsB - diffSetsA; return (b.gamesWon - b.gamesLost) - (a.gamesWon - a.gamesLost);
         });
     }
 
     function resolveAllNames(tObj) {
         let zoneResults = {}; let allSecondPlaces = [];
         tObj.fixtures.zones.forEach((zone, idx) => {
-            let standings = calculateZoneStandings(zone);
-            zoneResults[`Zona ${idx+1}`] = standings;
+            let standings = calculateZoneStandings(zone); zoneResults[`Zona ${idx+1}`] = standings;
             if (standings.length > 1) allSecondPlaces.push(standings[1]);
         });
         allSecondPlaces.sort((a, b) => {
@@ -425,38 +350,21 @@
             if (pl === 'BEST-2') return bestSecond;
             if (pl.startsWith('W-C') || pl.startsWith('W-S')) {
                 let code = pl.replace('W-', ''); let match = tObj.fixtures.knockout.find(m => m.id.includes(`-KO-${code}`));
-                if (match) return getMatchWinnerName(match) || `Ganador ${code}`;
+                if (match) return getWinnerFromMatch(match) || `Ganador ${code}`;
                 return `Ganador ${code}`;
             }
             return pl;
         }
 
-        function getMatchWinnerName(match) {
-            const s = match.scores;
-            if (s.s1p1 === '' || s.s1p2 === '' || s.s2p1 === '' || s.s2p2 === '') return null;
-            let p1Sets = 0; let p2Sets = 0;
-            if (parseInt(s.s1p1) > parseInt(s.s1p2)) p1Sets++; else p2Sets++;
-            if (parseInt(s.s2p1) > parseInt(s.s2p2)) p1Sets++; else p2Sets++;
-            if (p1Sets === 1 && p2Sets === 1) { if (parseInt(s.s3p1) > parseInt(s.s3p2)) p1Sets++; else p2Sets++; }
-            return p1Sets > p2Sets ? match.p1 : match.p2;
-        }
-
         ['Cuartos de Final', 'Semifinales', 'Final'].forEach(round => {
             tObj.fixtures.knockout.forEach(match => {
-                if (match.round === round) {
-                    match.p1 = getNameFromPlaceholder(match.p1Placeholder);
-                    match.p2 = getNameFromPlaceholder(match.p2Placeholder);
-                }
+                if (match.round === round) { match.p1 = getNameFromPlaceholder(match.p1Placeholder); match.p2 = getNameFromPlaceholder(match.p2Placeholder); }
             });
         });
     }
 
-    // ==========================================
-    // RENDERIZADO VISUAL DEL FIXTURE
-    // ==========================================
     function createMatchBlock(match, isFinished) {
-        const s = match.scores;
-        const disabled = isFinished ? "disabled" : "";
+        const s = match.scores; const disabled = isFinished ? "disabled" : "";
         return `
         <div class="matchup" data-id="${match.id}">
             <div class="player-row"><span class="p-name">${match.p1}</span>
@@ -477,8 +385,7 @@
     }
 
     function renderActiveFixture() {
-        const container = document.getElementById('fixtureContainer');
-        container.innerHTML = '';
+        const container = document.getElementById('fixtureContainer'); container.innerHTML = '';
         let isFinished = activeTournament.status === 'Finalizado';
 
         activeTournament.fixtures.zones.forEach(zone => {
@@ -489,19 +396,22 @@
                 let dS = st.setsWon - st.setsLost; let dG = st.gamesWon - st.gamesLost;
                 tableHTML += `<tr><td><strong>${i+1}°</strong></td><td><strong>${st.name}</strong></td><td>${st.matchesWon}</td><td>${dS >= 0 ? '+'+dS : dS}</td><td>${dG >= 0 ? '+'+dG : dG}</td></tr>`;
             });
-            tableHTML += `</tbody></table>`;
-            zoneHTML += tableHTML + `<strong>Partidos:</strong><br>`;
-            
+            tableHTML += `</tbody></table><strong>Partidos:</strong><br>`;
             zone.matches.forEach((match, idx) => { zoneHTML += `<div class="zone-match"><div class="match-header">Partido ${idx + 1}</div>${createMatchBlock(match, isFinished)}</div>`; });
-            zoneHTML += `</div>`;
-            container.innerHTML += zoneHTML;
+            container.innerHTML += zoneHTML + `</div>`;
         });
 
-        let knockoutHTML = `<div class="knockout-card"><h3>🔥 Fase Eliminatoria</h3><div class="bracket-container">`;
+        // BRACKET Y PODIO LADO A LADO
+        let knockoutHTML = `<div class="knockout-card">
+                                <h3>🔥 Fase Eliminatoria</h3>
+                                <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                                    <div class="bracket-container" style="flex: 1; overflow-x: auto;">`;
+        
         let rounds = {};
         activeTournament.fixtures.knockout.forEach(match => {
             if (!rounds[match.round]) rounds[match.round] = []; rounds[match.round].push(match);
         });
+        
         ['Cuartos de Final', 'Semifinales', 'Final'].forEach(roundName => {
             if (rounds[roundName]) {
                 knockoutHTML += `<div class="bracket-round"><h4>${roundName}</h4>`;
@@ -509,10 +419,52 @@
                 knockoutHTML += `</div>`;
             }
         });
-        knockoutHTML += `</div></div>`;
-        container.innerHTML += knockoutHTML;
         
-        // Aplica el bloqueo inteligente del 3er set
+        knockoutHTML += `</div>`; // Cierra bracket-container
+
+        // CALCULAR GANADORES PARA EL PODIO
+        let champ = "---", runnerUp = "---", third = "---";
+        let finalMatch = activeTournament.fixtures.knockout.find(m => m.round === 'Final');
+        if (finalMatch) {
+            let w = getWinnerFromMatch(finalMatch);
+            if (w) {
+                champ = w;
+                runnerUp = (w === finalMatch.p1) ? finalMatch.p2 : finalMatch.p1;
+            }
+        }
+        
+        let semiMatches = activeTournament.fixtures.knockout.filter(m => m.round === 'Semifinales');
+        if (semiMatches.length > 0) {
+            let semiLosers = [];
+            semiMatches.forEach(sm => {
+                let w = getWinnerFromMatch(sm);
+                if (w) semiLosers.push(w === sm.p1 ? sm.p2 : sm.p1);
+            });
+            if (semiLosers.length > 0) third = semiLosers.join(" / ");
+        }
+
+        // AGREGAR EL PODIO VISUAL
+        knockoutHTML += `
+            <div class="podium-container">
+                <h4 style="text-align:center; color:#e67e22; border-bottom: 1px solid #e67e22; padding-bottom:5px; margin-top:0;">🏆 PODIO</h4>
+                <div class="podium">
+                    <div class="step step-2">
+                        <div class="name">${runnerUp}</div>
+                        <div class="bar">🥈 2°</div>
+                    </div>
+                    <div class="step step-1">
+                        <div class="name" style="font-weight:bold; color:#f1c40f;">${champ}</div>
+                        <div class="bar">🥇 1°</div>
+                    </div>
+                    <div class="step step-3">
+                        <div class="name" style="font-size:11px;">${third}</div>
+                        <div class="bar">🥉 3°</div>
+                    </div>
+                </div>
+            </div>
+        </div></div>`; // Cierra flex-wrap y knockout-card
+
+        container.innerHTML += knockoutHTML;
         document.querySelectorAll('.matchup').forEach(m => updateSetStatusVisual(m));
     }
 
@@ -520,7 +472,6 @@
         const s1p1 = matchup.querySelector('.s1p1').value; const s1p2 = matchup.querySelector('.s1p2').value;
         const s2p1 = matchup.querySelector('.s2p1').value; const s2p2 = matchup.querySelector('.s2p2').value;
         const s3p1 = matchup.querySelector('.s3p1'); const s3p2 = matchup.querySelector('.s3p2');
-
         if (s1p1 !== "" && s1p2 !== "" && s2p1 !== "" && s2p2 !== "" && activeTournament.status !== 'Finalizado') {
             const p1W1 = parseInt(s1p1)>parseInt(s1p2); const p2W1 = parseInt(s1p2)>parseInt(s1p1);
             const p1W2 = parseInt(s2p1)>parseInt(s2p2); const p2W2 = parseInt(s2p2)>parseInt(s2p1);
@@ -529,23 +480,17 @@
         }
     }
 
-    // ==========================================
-    // ARRANQUE (OnLoad)
-    // ==========================================
+    // ARRANQUE
     window.onload = () => {
         document.getElementById('activeTournamentsGrid').innerHTML = '<p>Conectando con la base de datos...</p>';
         fetch(scriptURL)
             .then(res => res.json())
             .then(data => {
-                players = data.players || [];
-                tournaments = data.tournaments || [];
+                players = data.players || []; tournaments = data.tournaments || [];
                 players.forEach(p => { if(!categories.includes(p.category)) categories.push(p.category); });
-                updateUI();
-                renderDashboard();
+                updateUI(); renderDashboard();
             })
-            .catch(err => {
-                document.getElementById('activeTournamentsGrid').innerHTML = '<p style="color:red;">Error de conexión con Google Sheets.</p>';
-            });
+            .catch(err => { document.getElementById('activeTournamentsGrid').innerHTML = '<p style="color:red;">Error de conexión con Google Sheets.</p>'; });
     };
 </script>
 </body>
